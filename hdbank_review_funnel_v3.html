@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#d71920">
+  <title>Đánh giá trải nghiệm dịch vụ | HDBank</title>
+  <style>
+    :root {
+      --hdb-red: #d71920;
+      --hdb-red-dark: #aa1018;
+      --hdb-orange: #f58220;
+      --hdb-yellow: #ffc72c;
+      --ink: #22252a;
+      --muted: #68707c;
+      --line: #e8e9ed;
+      --surface: #ffffff;
+      --soft: #fff7f2;
+      --success: #16844b;
+      --danger: #c81e2a;
+      --shadow: 0 22px 60px rgba(83, 28, 20, .14);
+      --radius-xl: 28px;
+      --radius-lg: 18px;
+      --radius-md: 14px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background:
+        radial-gradient(circle at 8% 5%, rgba(255,199,44,.24), transparent 25rem),
+        linear-gradient(155deg, #fff8f4 0%, #fff 48%, #fff5ed 100%);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button, input, textarea { font: inherit; }
+    button, .star { -webkit-tap-highlight-color: transparent; }
+
+    .page-shell {
+      width: min(100%, 720px);
+      margin: 0 auto;
+      padding: 0 16px 32px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      margin: 0 -16px;
+      padding: calc(20px + env(safe-area-inset-top)) 24px 82px;
+      color: #fff;
+      text-align: center;
+      background: linear-gradient(135deg, var(--hdb-red) 0%, #e72c1f 52%, var(--hdb-orange) 100%);
+      border-radius: 0 0 38px 38px;
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      background: rgba(255,255,255,.11);
+      pointer-events: none;
+    }
+    .hero::before { width: 220px; height: 220px; top: -136px; right: -48px; }
+    .hero::after { width: 150px; height: 150px; bottom: -92px; left: -46px; }
+
+    .brand-panel {
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 68px;
+      padding: 10px 20px;
+      margin-bottom: 18px;
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 12px 30px rgba(87,21,17,.2);
+    }
+    .brand-panel img {
+      display: block;
+      width: min(200px, 56vw);
+      max-height: 54px;
+      object-fit: contain;
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: #fff5cc;
+    }
+    .hero h1 {
+      position: relative;
+      z-index: 1;
+      margin: 0;
+      font-size: clamp(26px, 7vw, 38px);
+      line-height: 1.16;
+      letter-spacing: -.03em;
+    }
+    .hero p {
+      position: relative;
+      z-index: 1;
+      max-width: 520px;
+      margin: 12px auto 0;
+      color: rgba(255,255,255,.92);
+      font-size: 15px;
+      line-height: 1.55;
+    }
+
+    .card {
+      position: relative;
+      z-index: 2;
+      margin-top: -52px;
+      padding: clamp(22px, 5vw, 34px);
+      background: rgba(255,255,255,.98);
+      border: 1px solid rgba(255,255,255,.9);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+    }
+
+    .section-heading { margin-bottom: 20px; }
+    .section-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 9px;
+      padding: 7px 10px;
+      color: var(--hdb-red);
+      background: #fff0ec;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .section-heading h2 {
+      margin: 0;
+      font-size: 21px;
+      line-height: 1.35;
+      letter-spacing: -.02em;
+    }
+    .section-heading p {
+      margin: 7px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .field { margin-bottom: 17px; }
+    .field label {
+      display: inline-block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 750;
+    }
+    .required { color: var(--hdb-red); }
+    .input-wrap { position: relative; }
+    .field input,
+    .field textarea {
+      width: 100%;
+      border: 2px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 14px 15px;
+      color: var(--ink);
+      background: #fff;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s, background .2s;
+    }
+    .field textarea { min-height: 112px; resize: vertical; line-height: 1.5; }
+    .field input::placeholder,
+    .field textarea::placeholder { color: #9b9fa7; }
+    .field input:hover,
+    .field textarea:hover { border-color: #d0d2d8; }
+    .field input:focus,
+    .field textarea:focus {
+      border-color: var(--hdb-red);
+      box-shadow: 0 0 0 4px rgba(215,25,32,.11);
+    }
+    .field input[aria-invalid="true"],
+    .field textarea[aria-invalid="true"] { border-color: var(--danger); }
+    .field-help { margin: 7px 2px 0; color: var(--muted); font-size: 12px; }
+
+    .divider { height: 1px; margin: 10px 0 26px; background: linear-gradient(90deg, transparent, var(--line) 13%, var(--line) 87%, transparent); }
+
+    .rating-block { text-align: center; }
+    .rating-block h2 { margin: 0; font-size: clamp(21px, 5vw, 27px); letter-spacing: -.025em; }
+    .rating-block > p { margin: 8px 0 18px; color: var(--muted); font-size: 14px; }
+    .stars {
+      display: flex;
+      justify-content: center;
+      gap: clamp(5px, 2.2vw, 12px);
+      margin: 0 auto;
+    }
+    .star {
+      appearance: none;
+      display: grid;
+      width: clamp(49px, 13vw, 64px);
+      height: clamp(49px, 13vw, 64px);
+      place-items: center;
+      padding: 0;
+      color: #c9ccd1;
+      background: #f7f7f8;
+      border: 2px solid transparent;
+      border-radius: 17px;
+      font-size: clamp(29px, 8vw, 39px);
+      line-height: 1;
+      cursor: pointer;
+      transition: transform .18s, color .18s, background .18s, border .18s, box-shadow .18s;
+    }
+    .star:hover { transform: translateY(-3px); }
+    .star:focus-visible { outline: 3px solid rgba(215,25,32,.25); outline-offset: 3px; }
+    .star.selected,
+    .star.preview {
+      color: var(--hdb-yellow);
+      background: #fff9df;
+      border-color: #ffe38b;
+      box-shadow: 0 8px 18px rgba(255,199,44,.18);
+    }
+    .rating-feedback {
+      min-height: 27px;
+      margin-top: 13px;
+      color: var(--hdb-red);
+      font-weight: 800;
+      font-size: 15px;
+    }
+
+    .dynamic-section {
+      display: none;
+      margin-top: 26px;
+      padding-top: 25px;
+      border-top: 1px solid var(--line);
+    }
+    .dynamic-section.active { display: block; animation: reveal .35s ease both; }
+    @keyframes reveal { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    .notice {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 20px;
+      padding: 15px;
+      color: #5f3b12;
+      background: #fff8e4;
+      border: 1px solid #ffe9a7;
+      border-radius: var(--radius-lg);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .notice-icon { flex: 0 0 auto; font-size: 22px; }
+
+    .btn {
+      display: inline-flex;
+      width: 100%;
+      min-height: 52px;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      border: 0;
+      border-radius: var(--radius-md);
+      padding: 14px 18px;
+      font-weight: 800;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform .18s, box-shadow .18s, filter .18s;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn:focus-visible { outline: 3px solid rgba(215,25,32,.25); outline-offset: 3px; }
+    .btn:disabled { cursor: not-allowed; opacity: .68; transform: none; }
+    .btn-primary {
+      color: #fff;
+      background: linear-gradient(135deg, var(--hdb-red), var(--hdb-orange));
+      box-shadow: 0 11px 24px rgba(215,25,32,.24);
+    }
+    .btn-primary:hover { box-shadow: 0 14px 28px rgba(215,25,32,.31); }
+
+    .status {
+      display: none;
+      margin-top: 13px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 14px;
+      text-align: center;
+    }
+    .status.show { display: block; }
+    .status.loading { color: #6a4b00; background: #fff7d6; }
+    .status.success { color: #0a6637; background: #e9f8f0; }
+    .status.error { color: #9d1620; background: #fff0f1; }
+
+    .celebration { text-align: center; }
+    .celebration-icon { font-size: 58px; line-height: 1; }
+    .celebration h3 { margin: 13px 0 7px; color: var(--hdb-red); font-size: 24px; }
+    .celebration p { margin: 0 auto 20px; max-width: 500px; color: var(--muted); font-size: 14px; line-height: 1.6; }
+    .store-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .btn-ios { color: #fff; background: #111; }
+    .btn-android { color: #fff; background: #237b45; }
+
+    .privacy {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin: 20px 3px 0;
+      color: #858a93;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .footer { padding: 20px 8px 0; color: #8c9097; text-align: center; font-size: 12px; }
+
+    @media (max-width: 580px) {
+      .meta-grid, .store-buttons { grid-template-columns: 1fr; gap: 0; }
+      .store-buttons { gap: 11px; }
+      .hero { padding-bottom: 76px; }
+      .card { margin-top: -46px; border-radius: 24px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page-shell">
+    <header class="hero">
+      <div class="brand-panel">
+        <img
+          src="https://www.dropbox.com/scl/fi/lq4h164q8v2438utovf42/Logo-HDB.png?rlkey=56g858j4k34e95k7sx0w31m6t&amp;st=oaqu6rkb&amp;raw=1"
+          alt="Logo HDBank"
+          width="200"
+          height="54"
+        >
+      </div>
+      <p class="eyebrow">Khảo sát trải nghiệm khách hàng</p>
+      <h1>Cảm nhận của Quý khách<br>là động lực để chúng tôi tốt hơn</h1>
+      <p>Chỉ mất khoảng 30 giây để chia sẻ trải nghiệm của Quý khách với HDBank.</p>
+    </header>
+
+    <section class="card" aria-labelledby="form-title">
+      <div class="section-heading">
+        <span class="section-chip">01 · Thông tin phục vụ</span>
+        <h2 id="form-title">Xác nhận điểm giao dịch</h2>
+        <p>Thông tin này giúp HDBank chuyển góp ý đến đúng đơn vị phụ trách.</p>
+      </div>
+
+      <div class="meta-grid">
+        <div class="field">
+          <label for="ma_nv">Mã nhân viên <span class="required" aria-hidden="true">*</span></label>
+          <input id="ma_nv" name="ma_nv" type="text" inputmode="text" autocomplete="off" placeholder="Ví dụ: NV0123" required aria-describedby="ma-nv-help">
+          <p class="field-help" id="ma-nv-help">Mã người đã hướng dẫn Quý khách</p>
+        </div>
+        <div class="field">
+          <label for="ma_pgd">Mã phòng giao dịch <span class="required" aria-hidden="true">*</span></label>
+          <input id="ma_pgd" name="ma_pgd" type="text" inputmode="text" autocomplete="off" placeholder="Ví dụ: PGD001" required aria-describedby="ma-pgd-help">
+          <p class="field-help" id="ma-pgd-help">Mã PGD nơi Quý khách được phục vụ</p>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="rating-block">
+        <span class="section-chip">02 · Mức độ hài lòng</span>
+        <h2>Bạn hài lòng với dịch vụ của HDBank ở mức nào?</h2>
+        <p>Chọn từ 1 đến 5 sao. 5 sao là mức hài lòng cao nhất.</p>
+        <div class="stars" role="radiogroup" aria-label="Chọn mức độ hài lòng từ 1 đến 5 sao">
+          <button class="star" type="button" role="radio" aria-checked="false" aria-label="1 sao, Rất chưa hài lòng" data-value="1">★</button>
+          <button class="star" type="button" role="radio" aria-checked="false" aria-label="2 sao, Chưa hài lòng" data-value="2">★</button>
+          <button class="star" type="button" role="radio" aria-checked="false" aria-label="3 sao, Bình thường" data-value="3">★</button>
+          <button class="star" type="button" role="radio" aria-checked="false" aria-label="4 sao, Hài lòng" data-value="4">★</button>
+          <button class="star" type="button" role="radio" aria-checked="false" aria-label="5 sao, Rất hài lòng" data-value="5">★</button>
+        </div>
+        <div id="rating-feedback" class="rating-feedback" aria-live="polite">Vui lòng chọn số sao</div>
+      </div>
+
+      <section id="feedback-section" class="dynamic-section" aria-labelledby="feedback-title">
+        <div class="notice">
+          <span class="notice-icon" aria-hidden="true">💬</span>
+          <div><strong>HDBank rất tiếc vì trải nghiệm chưa trọn vẹn.</strong><br>Góp ý của Quý khách sẽ giúp chúng tôi cải thiện chất lượng phục vụ.</div>
+        </div>
+
+        <form id="feedback-form" novalidate>
+          <div class="field">
+            <label for="kh_name">Họ và tên <span class="required" aria-hidden="true">*</span></label>
+            <input id="kh_name" name="kh_name" type="text" autocomplete="name" placeholder="Nhập họ và tên của Quý khách" required>
+          </div>
+          <div class="field">
+            <label for="kh_phone">Số điện thoại <span class="required" aria-hidden="true">*</span></label>
+            <input id="kh_phone" name="kh_phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="Ví dụ: 0901 234 567" pattern="[0-9+ ]{8,15}" required>
+          </div>
+          <div class="field">
+            <label for="kh_comment">Nội dung góp ý <span class="required" aria-hidden="true">*</span></label>
+            <textarea id="kh_comment" name="kh_comment" placeholder="Hãy cho HDBank biết điều gì cần được cải thiện..." required></textarea>
+          </div>
+          <button id="submit-button" type="submit" class="btn btn-primary">
+            <span aria-hidden="true">✓</span> Gửi đánh giá
+          </button>
+          <div id="submit-status" class="status" role="status" aria-live="polite"></div>
+        </form>
+      </section>
+
+      <section id="store-section" class="dynamic-section celebration" aria-labelledby="store-title">
+        <div class="celebration-icon" aria-hidden="true">🎉</div>
+        <h3 id="store-title">Cảm ơn Quý khách!</h3>
+        <p>HDBank rất vui vì đã mang đến trải nghiệm tích cực. Nếu có thêm 30 giây, Quý khách có thể chia sẻ đánh giá trên kho ứng dụng.</p>
+        <div class="store-buttons">
+          <a href="https://apps.apple.com/vn/app/hdbank/id1461658565" target="_blank" rel="noopener noreferrer" class="btn btn-ios" onclick="trackStoreClick('iOS')"> App Store</a>
+          <a href="https://play.google.com/store/apps/details?id=com.vnpay.hdbank&amp;hl=vi&amp;pli=1" target="_blank" rel="noopener noreferrer" class="btn btn-android" onclick="trackStoreClick('Android')">▶ Google Play</a>
+        </div>
+        <div id="store-status" class="status" role="status" aria-live="polite"></div>
+      </section>
+
+      <div class="privacy"><span aria-hidden="true">🔒</span><span>Thông tin của Quý khách chỉ được sử dụng để ghi nhận và cải thiện trải nghiệm dịch vụ.</span></div>
+    </section>
+    <footer class="footer">HDBank · Cam kết nâng cao chất lượng phục vụ</footer>
+  </main>
+
+  <script>
+    let currentRating = 0;
+    const ratingLabels = {
+      1: "Rất chưa hài lòng",
+      2: "Chưa hài lòng",
+      3: "Bình thường",
+      4: "Hài lòng",
+      5: "Rất hài lòng"
+    };
+
+    const stars = Array.from(document.querySelectorAll(".star"));
+    const feedbackSection = document.getElementById("feedback-section");
+    const storeSection = document.getElementById("store-section");
+    const ratingFeedback = document.getElementById("rating-feedback");
+    const feedbackForm = document.getElementById("feedback-form");
+    const submitButton = document.getElementById("submit-button");
+    const submitStatus = document.getElementById("submit-status");
+    const storeStatus = document.getElementById("store-status");
+
+    // Tự động điền thông tin từ UTM trên URL:
+    // utm_medium  -> Mã phòng giao dịch
+    // utm_content -> Mã nhân viên
+    function prefillTrackingInfoFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      const maPgdField = document.getElementById("ma_pgd");
+      const maNvField = document.getElementById("ma_nv");
+
+      if (params.has("utm_medium")) {
+        maPgdField.value = (params.get("utm_medium") || "").trim();
+        maPgdField.setAttribute("aria-invalid", "false");
+      }
+
+      if (params.has("utm_content")) {
+        maNvField.value = (params.get("utm_content") || "").trim();
+        maNvField.setAttribute("aria-invalid", "false");
+      }
+    }
+
+    prefillTrackingInfoFromUrl();
+
+    // Giữ nguyên link webapp theo yêu cầu.
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwJ52hke3Lwq9EXICReOE6LvjBLKbDjVCNBsC6iglJRK6TANNMEOffyOZ8Xsngd25HF/exec";
+
+    function getOS() {
+      const userAgent = navigator.userAgent || "";
+      const platform = navigator.platform || "";
+      if (["Macintosh", "MacIntel", "MacPPC", "Mac68K"].includes(platform)) return "Mac OS";
+      if (["iPhone", "iPad", "iPod"].includes(platform)) return "iOS";
+      if (["Win32", "Win64", "Windows", "WinCE"].includes(platform)) return "Windows";
+      if (/Android/i.test(userAgent)) return "Android";
+      if (/Linux/i.test(platform)) return "Linux";
+      return "Unknown OS";
+    }
+
+    function setStatus(element, type, message) {
+      element.className = "status show " + type;
+      element.textContent = message;
+    }
+
+    function clearStatus(element) {
+      element.className = "status";
+      element.textContent = "";
+    }
+
+    function validateTrackingInfo() {
+      const fields = [document.getElementById("ma_nv"), document.getElementById("ma_pgd")];
+      let firstInvalid = null;
+      fields.forEach(field => {
+        const invalid = !field.value.trim();
+        field.setAttribute("aria-invalid", String(invalid));
+        if (invalid && !firstInvalid) firstInvalid = field;
+      });
+      if (firstInvalid) {
+        firstInvalid.focus();
+        ratingFeedback.textContent = "Vui lòng nhập Mã nhân viên và Mã PGD trước khi đánh giá.";
+        return false;
+      }
+      return true;
+    }
+
+    function paintStars(value, className) {
+      stars.forEach(star => star.classList.toggle(className, Number(star.dataset.value) <= value));
+    }
+
+    stars.forEach(star => {
+      star.addEventListener("mouseenter", () => paintStars(Number(star.dataset.value), "preview"));
+      star.addEventListener("mouseleave", () => stars.forEach(item => item.classList.remove("preview")));
+      star.addEventListener("focus", () => paintStars(Number(star.dataset.value), "preview"));
+      star.addEventListener("blur", () => stars.forEach(item => item.classList.remove("preview")));
+      star.addEventListener("click", () => {
+        if (!validateTrackingInfo()) return;
+        currentRating = Number(star.dataset.value);
+        paintStars(currentRating, "selected");
+        stars.forEach(item => item.setAttribute("aria-checked", String(item === star)));
+        ratingFeedback.textContent = currentRating + "/5 · " + ratingLabels[currentRating];
+        clearStatus(submitStatus);
+        clearStatus(storeStatus);
+
+        if (currentRating === 5) {
+          feedbackSection.classList.remove("active");
+          storeSection.classList.add("active");
+          storeSection.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        } else {
+          storeSection.classList.remove("active");
+          feedbackSection.classList.add("active");
+          feedbackSection.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
+      });
+    });
+
+    ["ma_nv", "ma_pgd"].forEach(id => {
+      document.getElementById(id).addEventListener("input", event => event.target.setAttribute("aria-invalid", "false"));
+    });
+
+    feedbackForm.addEventListener("submit", submitToGoogleSheet);
+
+    async function submitToGoogleSheet(event) {
+      event.preventDefault();
+      if (!validateTrackingInfo()) return;
+      if (!currentRating || currentRating === 5) {
+        ratingFeedback.textContent = "Vui lòng chọn mức đánh giá từ 1 đến 4 sao để gửi góp ý.";
+        return;
+      }
+
+      const fields = Array.from(feedbackForm.querySelectorAll("input, textarea"));
+      fields.forEach(field => field.setAttribute("aria-invalid", String(!field.checkValidity())));
+      const invalidField = fields.find(field => !field.checkValidity());
+      if (invalidField) {
+        invalidField.focus();
+        setStatus(submitStatus, "error", "Vui lòng kiểm tra và điền đầy đủ các thông tin bắt buộc.");
+        return;
+      }
+
+      submitButton.disabled = true;
+      submitButton.innerHTML = "Đang gửi...";
+      setStatus(submitStatus, "loading", "Đang ghi nhận đánh giá của Quý khách...");
+
+      try {
+        await sendDataToSheet(
+          document.getElementById("ma_nv").value.trim(),
+          document.getElementById("ma_pgd").value.trim(),
+          currentRating,
+          document.getElementById("kh_name").value.trim(),
+          document.getElementById("kh_phone").value.trim(),
+          document.getElementById("kh_comment").value.trim(),
+          getOS(),
+          "ChuaHaiLong"
+        );
+        setStatus(submitStatus, "success", "Cảm ơn Quý khách! Góp ý đã được ghi nhận thành công.");
+        feedbackForm.reset();
+        fields.forEach(field => field.setAttribute("aria-invalid", "false"));
+      } catch (error) {
+        console.error("Error!", error);
+        setStatus(submitStatus, "error", "Chưa thể gửi đánh giá. Vui lòng kiểm tra kết nối và thử lại.");
+      } finally {
+        submitButton.disabled = false;
+        submitButton.innerHTML = '<span aria-hidden="true">✓</span> Gửi đánh giá';
+      }
+    }
+
+    function trackStoreClick(storeType) {
+      if (!validateTrackingInfo() || currentRating !== 5) return;
+      setStatus(storeStatus, "loading", "Đang ghi nhận lựa chọn của Quý khách...");
+      sendDataToSheet(
+        document.getElementById("ma_nv").value.trim(),
+        document.getElementById("ma_pgd").value.trim(),
+        currentRating,
+        "Khách hàng 5 sao",
+        "",
+        "",
+        storeType,
+        "HaiLong"
+      ).then(() => {
+        setStatus(storeStatus, "success", "Cảm ơn Quý khách đã đồng hành cùng HDBank!");
+      }).catch(error => {
+        console.error("Error!", error);
+        setStatus(storeStatus, "error", "Chưa thể ghi nhận thao tác, nhưng Quý khách vẫn có thể tiếp tục đến kho ứng dụng.");
+      });
+    }
+
+    function sendDataToSheet(maNv, maPgd, rating, name, phone, comment, os, sheetType) {
+      const formData = new FormData();
+      formData.append("ma_nv", maNv);
+      formData.append("ma_pgd", maPgd);
+      formData.append("rating", rating);
+      formData.append("name", name);
+      formData.append("phone", phone);
+      formData.append("comment", comment);
+      formData.append("os", os);
+      formData.append("sheet_type", sheetType);
+      formData.append("timestamp", new Date().toLocaleString("vi-VN"));
+
+      return fetch(SCRIPT_URL, {
+        method: "POST",
+        body: formData,
+        mode: "no-cors"
+      });
+    }
+  </script>
+</body>
+</html>
